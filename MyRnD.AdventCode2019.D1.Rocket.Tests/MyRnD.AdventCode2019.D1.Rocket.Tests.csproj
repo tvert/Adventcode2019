@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MyRnD.AdventCode2019.D02.IntCode\MyRnD.AdventCode2019.D02.IntCode.csproj" />
     <ProjectReference Include="..\MyRnD.AdventCode2019.D1.Rocket\MyRnD.AdventCode2019.D1.Rocket.csproj" />
   </ItemGroup>
 
