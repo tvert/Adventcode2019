@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
@@ -14,8 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyRnD.AdventCode2019.D02.IntCode\MyRnD.AdventCode2019.D02.IntCode.csproj" />
-    <ProjectReference Include="..\MyRnD.AdventCode2019.D1.Rocket\MyRnD.AdventCode2019.D1.Rocket.csproj" />
+    <ProjectReference Include="..\..\Src\MyRnD.AdventCode2019.ConsoleApp\MyRnD.AdventCode2019.ConsoleApp.csproj" />
   </ItemGroup>
 
 </Project>

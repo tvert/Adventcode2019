@@ -6,10 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="IntCode-Program2-MyInput.txt">
+    <ProjectReference Include="..\MyRnD.AdventCode2019.Parts\MyRnD.AdventCode2019.Parts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Day01\Rocket-day1.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="IntCode-Program1.txt">
+    <None Update="Day02\IntCode-MyInput.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Day02\IntCode-1202Program.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -1,8 +1,7 @@
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MyRnD.AdventCode2019.D02.IntCode;
+using System.Linq;
 
-namespace MyRnD.AdventCode2019.D1.Rocket.Tests
+namespace MyRnD.AdventCode2019.Parts.Tests
 {
     [TestClass]
     public class IntCodeComputerTests
