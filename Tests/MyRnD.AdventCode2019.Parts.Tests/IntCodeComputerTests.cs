@@ -4,7 +4,7 @@ using System.Linq;
 namespace MyRnD.AdventCode2019.Parts.Tests
 {
     [TestClass]
-    public class IntCodeComputerTests
+    public sealed class IntCodeComputerTests
     {
         private IntCodeComputer _intCodeComputer;
 

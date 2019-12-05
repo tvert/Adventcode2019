@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MyRnD.AdventCode2019.Parts.Tests
 {
     [TestClass]
-    public class RocketTests
+    public sealed class RocketTests
     {
         private Rocket _rocket;
 

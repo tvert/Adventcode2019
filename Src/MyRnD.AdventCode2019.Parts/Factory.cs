@@ -9,25 +9,27 @@ namespace MyRnD.AdventCode2019.Parts
     {
         const int BufferSize = 1024;
 
-        public Rocket CreateRocketFromFile(string fullFileName)
+        public CrossedWiresResolver CreateCrossedWiresResolverFromFile(string fullFileName)
         {
-            var tempRocket = new Rocket();
+            List<WirePath> wirePaths = new List<WirePath>();
             using (var fileStream = File.OpenRead(fullFileName))
             using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, BufferSize))
             {
                 string line;
                 while ((line = streamReader.ReadLine()) != null)
                 {
-                    // line has only one value
+                    // 1 wire path per line
                     if (!string.IsNullOrWhiteSpace(line))
                     {
-                        int moduleMass = int.Parse(line);
-                        var tempModule = new Module { Mass = moduleMass };
-                        tempRocket.Modules.Add(tempModule);
+                        var wirePathTextInLine = line.Split(',');
+                        var wirePath = new WirePath();
+                        wirePath.AddRange(wirePathTextInLine);
+                        wirePaths.Add(wirePath);
                     }
                 }
             }
-            return tempRocket;
+            var tempCrossedWiresResolver = new CrossedWiresResolver(wirePaths);
+            return tempCrossedWiresResolver;
         }
 
         public IntCodeComputer CreateIntCodeComputerFromFile(string fullFileName)
@@ -50,6 +52,27 @@ namespace MyRnD.AdventCode2019.Parts
             }
             var tempIntCodeComputer = new IntCodeComputer(opCodes.ToList());
             return tempIntCodeComputer;
+        }
+        
+        public Rocket CreateRocketFromFile(string fullFileName)
+        {
+            var tempRocket = new Rocket();
+            using (var fileStream = File.OpenRead(fullFileName))
+            using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, BufferSize))
+            {
+                string line;
+                while ((line = streamReader.ReadLine()) != null)
+                {
+                    // line has only one value
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        int moduleMass = int.Parse(line);
+                        var tempModule = new Module { Mass = moduleMass };
+                        tempRocket.Modules.Add(tempModule);
+                    }
+                }
+            }
+            return tempRocket;
         }
     }
 }

@@ -4,7 +4,7 @@ using System;
 namespace MyRnD.AdventCode2019.Parts.Tests
 {
     [TestClass]
-    public class BoolTests
+    public sealed class BoolTests
     {
         [TestMethod]
         public void Bool_TryParse_DifferentValues()
