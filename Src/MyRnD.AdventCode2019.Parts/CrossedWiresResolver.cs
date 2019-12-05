@@ -4,142 +4,6 @@ using System.Text;
 
 namespace MyRnD.AdventCode2019.Parts
 {
-    /// <summary>
-    /// A left bottom origin rectangle (O)
-    /// ...........
-    /// ...........
-    /// ...........
-    /// ....+----+.
-    /// ....|....|.
-    /// ....|....|.
-    /// ....|....|.
-    /// .........|.
-    /// .P-------+.    Central Port
-    /// O..........    Origin of rectangle (Left Bottom)
-    /// 
-    /// </summary>
-    public sealed class Rectangle
-    {
-        public Rectangle()
-        : this (new Point(0,0), new Point(0,0) )
-        {
-        }
-
-        public Rectangle(Point leftBottom, Point rightTop)
-        {
-            LeftBottom = leftBottom;
-            RightTop = rightTop;
-        }
-
-        public Point LeftBottom { get; }
-
-        public Point RightTop { get; }
-
-        public void AdjustDimensionToIncludePoint(Point newPoint)
-        {
-            LeftBottom.X = Math.Min(newPoint.X, LeftBottom.X);
-            LeftBottom.Y = Math.Min(newPoint.Y, LeftBottom.Y);
-            RightTop.X = Math.Max(newPoint.X, RightTop.X);
-            RightTop.Y = Math.Max(newPoint.Y, RightTop.Y);
-        }
-
-        public override string ToString()
-        {
-            string s = $"LB {LeftBottom} => RT {RightTop}";
-            return s;
-        }
-
-        public void Union(Rectangle addedRectangle)
-        {
-            LeftBottom.X = Math.Min(addedRectangle.LeftBottom.X, LeftBottom.X);
-            LeftBottom.Y = Math.Min(addedRectangle.LeftBottom.Y, LeftBottom.Y);
-            RightTop.X = Math.Max(addedRectangle.RightTop.X, RightTop.X);
-            RightTop.Y = Math.Max(addedRectangle.RightTop.Y, RightTop.Y);
-        }
-    }
-
-    public sealed class Point
-    {
-        public Point(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-
-        public int X { get; set; }
-        public int Y { get; set; }
-
-        public override string ToString()
-        {
-            string s = $"[{X}, {Y}]";
-            return s;
-        }
-    }
-
-    public sealed class Size
-    {
-        public Size(int width, int height)
-        {
-            Width = width;
-            Height = height;
-        }
-
-        public int Width { get; set; }
-        public int Height { get; set; }
-    }
-
-
-
-    public sealed class WirePath : List<string>
-    {
-        private Rectangle _box = null;
-
-        public Rectangle Box => _box ?? CalculateWireBoxing();
-
-        private Rectangle CalculateWireBoxing()
-        {
-            if (_box == null)
-            {
-               // Iterate through
-                var tempBox = new Rectangle();
-                Point currentPosition = new Point(0, 0);
-                foreach (var step in this)
-                {
-                    currentPosition = UpdatePositionWithStep(step, currentPosition);
-                    tempBox.AdjustDimensionToIncludePoint(currentPosition);
-                }
-                _box = tempBox;
-            }
-            return _box;
-        }
-
-        public Point UpdatePositionWithStep(string step, Point currentPosition)
-        {
-            var pathOrientation = step[0].ToString().ToUpper();
-            var increment = int.Parse(step.Substring(1, step.Length - 1));
-            var newPosition = new Point(currentPosition.X, currentPosition.Y);
-            switch (pathOrientation)
-            {
-                case "L":
-                    newPosition.Y -= increment;
-                    break;
-                case "R":
-                    newPosition.Y += increment;
-                    break;
-                case "D":
-                    newPosition.X -= increment;
-                    break;
-                case "U":
-                    newPosition.X += increment;
-                    break;
-                default:
-                    throw new InvalidOperationException(
-                        $"Unknown orientation '{pathOrientation}' [Step: '{step}'] [Increment: '{increment}'].");
-            }
-            return newPosition;
-        }
-    }
-
     public sealed class CrossedWiresResolver
     {
         public const char CellCentralPort = 'o';
@@ -149,13 +13,12 @@ namespace MyRnD.AdventCode2019.Parts
         public const char CellCrossedWire = 'X';
         public const char CellEmpty = '.';
 
-
-        private Rectangle _fullBox = null;
-        private Size _panelSize = null;
-        private int? _closestIntersectionDistance = null;
-        private Point _closestIntersectionPoint = null;
-        private char[,] _visualGrid = null;
-        private List<Point> _intersections = null;
+        private Rectangle _fullBox;
+        private Size _panelSize;
+        private int? _closestIntersectionDistance;
+        private Point _closestIntersectionPoint;
+        private char[,] _visualGrid;
+        private List<Point> _intersections;
 
 
         public CrossedWiresResolver(List<WirePath> wirePaths)
@@ -232,7 +95,6 @@ namespace MyRnD.AdventCode2019.Parts
             {
                 // Iterate through
                 var tempBox = new Rectangle();
-                Point currentPosition = new Point(0, 0);
                 foreach (var wire in WirePaths)
                 {
                     tempBox.Union(wire.Box);
@@ -310,7 +172,7 @@ namespace MyRnD.AdventCode2019.Parts
             foreach (var wire in WirePaths)
             {
                 wireNum++;
-                char wireNumber = char.Parse(wireNum.ToString());
+                char wireNumberChar = char.Parse(wireNum.ToString());
                 var currentPosition = centralPortOrigin;
                 foreach (var step in wire)
                 {
@@ -328,7 +190,7 @@ namespace MyRnD.AdventCode2019.Parts
                                     movingCursor.Y = currentPosition.Y - inc;
                                     var currentCell = grid[movingCursor.X, movingCursor.Y];
                                     //previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, CellHorizontalWire, step);
-                                    previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, (char)wireNumber, step);
+                                    previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, wireNumberChar, step);
                                 }
                             }
                             break;
@@ -341,7 +203,7 @@ namespace MyRnD.AdventCode2019.Parts
                                     movingCursor.Y = currentPosition.Y + inc;
                                     var currentCell = grid[movingCursor.X, movingCursor.Y];
                                     //previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, CellHorizontalWire, step);
-                                    previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, (char)wireNumber, step);
+                                    previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, wireNumberChar, step);
                                 }
                             }
                             break;
@@ -354,7 +216,7 @@ namespace MyRnD.AdventCode2019.Parts
                                     movingCursor.X = currentPosition.X - inc;
                                     var currentCell = grid[movingCursor.X, movingCursor.Y];
                                     //previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, CellVerticalWire, step);
-                                    previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, (char)wireNumber, step);
+                                    previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, wireNumberChar, step);
                                 }
                             }
                             break;
@@ -367,7 +229,7 @@ namespace MyRnD.AdventCode2019.Parts
                                     movingCursor.X = currentPosition.X + inc;
                                     var currentCell = grid[movingCursor.X, movingCursor.Y];
                                     //previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, CellVerticalWire, step);
-                                    previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, (char)wireNumber, step);
+                                    previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, wireNumberChar, step);
                                 }
                             }
                             break;

@@ -28,10 +28,10 @@ namespace MyRnD.AdventCode2019.Parts
             return RunInternal(opCodes, 0);
         }
 
-        public List<int> RunInternal(List<int> opCodes, int OpCodeCurrentIndex)
+        public List<int> RunInternal(List<int> opCodes, int opCodeCurrentIndex)
         {
             int[] currentOperation = new int[OperationLength];
-            for (int s = OpCodeCurrentIndex, t = 0; s < OpCodeCurrentIndex + OperationLength; s++, t++)
+            for (int s = opCodeCurrentIndex, t = 0; s < opCodeCurrentIndex + OperationLength; s++, t++)
             {
                 currentOperation[t] = opCodes[s];
             }
@@ -60,11 +60,11 @@ namespace MyRnD.AdventCode2019.Parts
             }
             else
             {
-                throw new InvalidOperationException($"Unknown OpCode '{currentOpCode}' at position '{OpCodeCurrentIndex}' " +
+                throw new InvalidOperationException($"Unknown OpCode '{currentOpCode}' at position '{opCodeCurrentIndex}' " +
                                                     $"(Current Operation: [{currentOperation[0]}, {currentOperation[1]}, {currentOperation[2]}, {currentOperation[3]}]).");
             }
 
-            return RunInternal(opCodes, OpCodeCurrentIndex + OperationLength);
+            return RunInternal(opCodes, opCodeCurrentIndex + OperationLength);
         }
 
         public (int noun, int verb) FindNounAndVerbForOutput(int expectedOutput)

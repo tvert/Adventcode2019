@@ -8,10 +8,10 @@ namespace MyRnD.AdventCode2019.ConsoleApp
     {
         private static void Day02_A()
         {
-            const string DefaultFilename = "IntCode-1202Program.txt";
+            const string defaultFilename = "IntCode-1202Program.txt";
             try
             {
-                string fullFilename = Path.Combine(Environment.CurrentDirectory, "Day02", DefaultFilename);
+                string fullFilename = Path.Combine(Environment.CurrentDirectory, "Day02", defaultFilename);
                 Console.WriteLine();
                 Console.WriteLine($"Loading IntCode data from '{fullFilename}'...");
                 Console.WriteLine();
@@ -35,10 +35,10 @@ namespace MyRnD.AdventCode2019.ConsoleApp
 
         private static void Day02_B()
         {
-            const string DefaultFilename = @"IntCode-MyInput.txt";
+            const string defaultFilename = @"IntCode-MyInput.txt";
             try
             {
-                string fullFilename = Path.Combine(Environment.CurrentDirectory, "Day02", DefaultFilename);
+                string fullFilename = Path.Combine(Environment.CurrentDirectory, "Day02", defaultFilename);
                 Console.WriteLine();
                 Console.WriteLine($"Loading IntCode data from '{fullFilename}'...");
                 Console.WriteLine();
