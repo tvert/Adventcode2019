@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29403.142
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyRnD.AdventCode2019.D1.Rocket", "MyRnD.AdventCode2019.D1.Rocket\MyRnD.AdventCode2019.D1.Rocket.csproj", "{2A3F706F-EAFE-49F5-8A91-903494F4553F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyRnD.AdventCode2019.ConsoleApp", "Src\MyRnD.AdventCode2019.ConsoleApp\MyRnD.AdventCode2019.ConsoleApp.csproj", "{2A3F706F-EAFE-49F5-8A91-903494F4553F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyRnD.AdventCode2019.D1.Rocket.Tests", "MyRnD.AdventCode2019.D1.Rocket.Tests\MyRnD.AdventCode2019.D1.Rocket.Tests.csproj", "{8A19F70D-1951-4B1C-91F2-2F2B5DD94297}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyRnD.AdventCode2019.Parts.Tests", "Tests\MyRnD.AdventCode2019.Parts.Tests\MyRnD.AdventCode2019.Parts.Tests.csproj", "{8A19F70D-1951-4B1C-91F2-2F2B5DD94297}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{8A14F9D6-70D8-46B5-9734-1B7EE55C74E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D6C137AF-2DC7-470B-99D1-9B58EC72E0ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyRnD.AdventCode2019.Parts", "Src\MyRnD.AdventCode2019.Parts\MyRnD.AdventCode2019.Parts.csproj", "{78CFB8FA-7B52-4EDF-8888-DED5358D347D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +27,18 @@ Global
 		{8A19F70D-1951-4B1C-91F2-2F2B5DD94297}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A19F70D-1951-4B1C-91F2-2F2B5DD94297}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A19F70D-1951-4B1C-91F2-2F2B5DD94297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78CFB8FA-7B52-4EDF-8888-DED5358D347D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78CFB8FA-7B52-4EDF-8888-DED5358D347D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78CFB8FA-7B52-4EDF-8888-DED5358D347D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78CFB8FA-7B52-4EDF-8888-DED5358D347D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2A3F706F-EAFE-49F5-8A91-903494F4553F} = {8A14F9D6-70D8-46B5-9734-1B7EE55C74E7}
+		{8A19F70D-1951-4B1C-91F2-2F2B5DD94297} = {D6C137AF-2DC7-470B-99D1-9B58EC72E0ED}
+		{78CFB8FA-7B52-4EDF-8888-DED5358D347D} = {8A14F9D6-70D8-46B5-9734-1B7EE55C74E7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {43315C20-06A5-4534-BDD9-80C1990CD111}

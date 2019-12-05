@@ -1,10 +1,9 @@
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace MyRnD.AdventCode2019.D1.Rocket.Tests
+namespace MyRnD.AdventCode2019.Parts.Tests
 {
     [TestClass]
-    public class RocketTests
+    public sealed class RocketTests
     {
         private Rocket _rocket;
 
@@ -125,26 +124,5 @@ namespace MyRnD.AdventCode2019.D1.Rocket.Tests
         }
 
         #endregion
-
-
-        [TestMethod]
-        public void RocketBool()
-        {
-            string[] values = { null, String.Empty, "True", "False",
-                "true", "false", "    true    ", "0",
-                "1", "-1", "string" };
-            foreach (var value in values)
-            {
-                bool flag;
-                if (Boolean.TryParse(value, out flag))
-                    Console.WriteLine("'{0}' --> {1}", value, flag);
-                else
-                    Console.WriteLine("Unable to parse '{0}' flag: '{1}'.",
-                        value == null ? "<null>" : value, flag);
-            }
-
-            bool b = bool.Parse("1");
-            Console.WriteLine($"bool.Parse(\"1\") => '{b}'");
-        }
     }
 }
