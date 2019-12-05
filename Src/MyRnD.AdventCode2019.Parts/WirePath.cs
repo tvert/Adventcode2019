@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyRnD.AdventCode2019.Parts.Math2D;
+using System;
 using System.Collections.Generic;
 
 namespace MyRnD.AdventCode2019.Parts

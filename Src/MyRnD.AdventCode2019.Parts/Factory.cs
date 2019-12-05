@@ -9,7 +9,12 @@ namespace MyRnD.AdventCode2019.Parts
     {
         const int BufferSize = 1024;
 
-        public CrossedWiresResolver CreateCrossedWiresResolverFromFile(string fullFileName)
+        public CrossedWiresResolver CreateCrossedWiresResolver()
+        {
+            return new CrossedWiresResolver();
+        }
+
+        public CircuitPanel CreateCircuitPanelFromFile(string fullFileName)
         {
             List<WirePath> wirePaths = new List<WirePath>();
             using (var fileStream = File.OpenRead(fullFileName))
@@ -28,8 +33,8 @@ namespace MyRnD.AdventCode2019.Parts
                     }
                 }
             }
-            var tempCrossedWiresResolver = new CrossedWiresResolver(wirePaths);
-            return tempCrossedWiresResolver;
+            var tempCircuitPanel = new CircuitPanel(wirePaths, CreateCrossedWiresResolver());
+            return tempCircuitPanel;
         }
 
         public IntCodeComputer CreateIntCodeComputerFromFile(string fullFileName)

@@ -7,6 +7,8 @@ namespace MyRnD.AdventCode2019.ConsoleApp
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("PRESS ENTER TO START ...");
+            Console.ReadLine();
 #if false
             Separator(nameof(Program.Day01));
             Day01();
@@ -21,6 +23,9 @@ namespace MyRnD.AdventCode2019.ConsoleApp
 
             Separator(nameof(Program.Day03_B));
             Day03_B();
+
+            Console.WriteLine("PRESS ENTER TO STOP.");
+            Console.ReadLine();
         }
 
         static void Separator(string name)

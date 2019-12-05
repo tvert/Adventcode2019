@@ -1,4 +1,5 @@
 ﻿using MyRnD.AdventCode2019.Parts;
+using MyRnD.AdventCode2019.Parts.Math2D;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,19 +19,19 @@ namespace MyRnD.AdventCode2019.ConsoleApp
                 Console.WriteLine();
 
                 var factory = new Factory();
-                CrossedWiresResolver crossedWiresResolver = factory.CreateCrossedWiresResolverFromFile(fullFilename);
-                Console.WriteLine($"There are #{crossedWiresResolver.WirePaths.Count} crossed wires data loaded.");
+                CircuitPanel circuitPanel = factory.CreateCircuitPanelFromFile(fullFilename);
+                Console.WriteLine($"There are #{circuitPanel.WirePaths.Count} crossed wires loaded on the circuit panel.");
                 Console.WriteLine();
 
                 Console.WriteLine(
-                    $"The boxing rectangle for those crossed wires is defined as '{crossedWiresResolver.FullBox}'.");
+                    $"The boxing rectangle for those crossed wires is defined within '{circuitPanel.FullBox}'.");
                 Console.WriteLine();
 
-                int closestDistance = crossedWiresResolver.ClosestIntersectionDistance;
-                Point closestPoint = crossedWiresResolver.ClosestIntersectionPoint;
-                List<Point> intersections = crossedWiresResolver.Intersections;
+                int closestDistance = circuitPanel.ClosestIntersectionDistance;
+                Point closestPoint = circuitPanel.ClosestIntersectionPoint;
+                List<Point> intersections = circuitPanel.Intersections;
                 Console.WriteLine(
-                    $"The closest distance is '{closestDistance}' for point {closestPoint} (there are #{intersections.Count} intersection points in total.");
+                    $"The closest distance from central port to the intersection point {closestPoint} is '{closestDistance}' (there are #{intersections.Count} intersection points in total.");
                 Console.WriteLine();
             }
             catch (Exception ex)
@@ -49,18 +50,19 @@ namespace MyRnD.AdventCode2019.ConsoleApp
                 Console.WriteLine();
 
                 var factory = new Factory();
-                CrossedWiresResolver crossedWiresResolver = factory.CreateCrossedWiresResolverFromFile(fullFilename);
-                Console.WriteLine($"There are #{crossedWiresResolver.WirePaths.Count} crossed wires data loaded.");
+                CircuitPanel circuitPanel = factory.CreateCircuitPanelFromFile(fullFilename);
+                Console.WriteLine($"There are #{circuitPanel.WirePaths.Count} crossed wires loaded on the circuit panel.");
                 Console.WriteLine();
 
-                Console.WriteLine($"The boxing rectangle for those crossed wires is defined as '{crossedWiresResolver.FullBox}'.");
-                Console.WriteLine();
-
-                int closestDistance = crossedWiresResolver.ClosestIntersectionDistance;
-                Point closestPoint = crossedWiresResolver.ClosestIntersectionPoint;
-                List<Point> intersections = crossedWiresResolver.Intersections;
                 Console.WriteLine(
-                    $"The closest distance is '{closestDistance}' for point {closestPoint} (there are #{intersections.Count} intersection points in total.");
+                    $"The boxing rectangle for those crossed wires is defined within '{circuitPanel.FullBox}'.");
+                Console.WriteLine();
+
+                int closestDistance = circuitPanel.ClosestIntersectionDistance;
+                Point closestPoint = circuitPanel.ClosestIntersectionPoint;
+                List<Point> intersections = circuitPanel.Intersections;
+                Console.WriteLine(
+                    $"The closest distance from central port to the intersection point {closestPoint} is '{closestDistance}' (there are #{intersections.Count} intersection points in total.");
                 Console.WriteLine();
             }
             catch (Exception ex)

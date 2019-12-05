@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyRnD.AdventCode2019.Parts
+namespace MyRnD.AdventCode2019.Parts.Math2D
 {
     /// <summary>
     /// A left bottom origin rectangle (O)

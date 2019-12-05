@@ -1,4 +1,4 @@
-﻿namespace MyRnD.AdventCode2019.Parts
+﻿namespace MyRnD.AdventCode2019.Parts.Math2D
 {
     public sealed class Size
     {
