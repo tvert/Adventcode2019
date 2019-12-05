@@ -1,5 +1,6 @@
 ﻿using MyRnD.AdventCode2019.Parts;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace MyRnD.AdventCode2019.ConsoleApp
@@ -44,6 +45,10 @@ namespace MyRnD.AdventCode2019.ConsoleApp
                 Console.WriteLine();
 
                 Console.WriteLine($"The boxing rectangle for those crossed wires is defined as '{crossedWiresResolver.FullBox}'.");
+                Console.WriteLine();
+
+                (int closest, char[,] grid, List<Point> intersections, Point closestPoint) = crossedWiresResolver.DistanceCentralPortToClosestIntersection();
+                Console.WriteLine($"The closest distance is '{closest}' for point {closestPoint} (there are #{intersections.Count} intersection points in total.");
                 Console.WriteLine();
             }
             catch (Exception ex)

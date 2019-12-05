@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace MyRnD.AdventCode2019.Parts
 {
@@ -44,7 +45,7 @@ namespace MyRnD.AdventCode2019.Parts
 
         public override string ToString()
         {
-            string s = $"LB [{LeftBottom.X}, {LeftBottom.Y}] => RT [{RightTop.X}, {RightTop.Y}]";
+            string s = $"LB {LeftBottom} => RT {RightTop}";
             return s;
         }
 
@@ -67,6 +68,12 @@ namespace MyRnD.AdventCode2019.Parts
 
         public int X { get; set; }
         public int Y { get; set; }
+
+        public override string ToString()
+        {
+            string s = $"[{X}, {Y}]";
+            return s;
+        }
     }
 
     public sealed class Size
@@ -138,7 +145,7 @@ namespace MyRnD.AdventCode2019.Parts
         public const char CellCentralPort = 'o';
         public const char CellHorizontalWire = '-';
         public const char CellVerticalWire = '|';
-        //const char CellTurnedWire = '+';
+        public const char CellTurnedWire = '+';
         public const char CellCrossedWire = 'X';
         public const char CellEmpty = '.';
 
@@ -157,13 +164,13 @@ namespace MyRnD.AdventCode2019.Parts
 
         public Size PanelSize => _panelSize ?? CalculatePanelSize();
 
-        public (int shortest, char[,] grid) DistanceCentralPortToClosestIntersection()
+        public (int shortest, char[,] grid, List<Point> intersections, Point closestPoint) DistanceCentralPortToClosestIntersection()
         {
-            int closestDistance = -1;
+            int closestDistance = int.MaxValue;
 
             Rectangle fullBox = FullBox;
             var panelSize = PanelSize;
-            char[,] grid = new char[panelSize.Width+1, panelSize.Height+1];
+            char[,] grid = new char[panelSize.Width, panelSize.Height];
 
             // Initialize the array with the 'Empty cell' character
             int horizontalBound = grid.GetUpperBound(0);
@@ -181,9 +188,13 @@ namespace MyRnD.AdventCode2019.Parts
             var centralPortOrigin = new Point(originX, originY);
 
             grid[centralPortOrigin.X, centralPortOrigin.Y] = CellCentralPort;
+            var previousCell = CellCentralPort;
 
+            int wireNum = 0;
             foreach (var wire in WirePaths)
             {
+                wireNum++;
+                char wireNumber = char.Parse(wireNum.ToString());
                 var currentPosition = centralPortOrigin;
                 foreach (var step in wire)
                 {
@@ -200,7 +211,8 @@ namespace MyRnD.AdventCode2019.Parts
                             {
                                 movingCursor.Y = currentPosition.Y - inc;
                                 var currentCell = grid[movingCursor.X, movingCursor.Y];
-                                UpdateGridCell(currentCell, grid, movingCursor, CellHorizontalWire, step);
+                                //previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, CellHorizontalWire, step);
+                                previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, (char)wireNumber, step);
                             }
                         }
                             break;
@@ -212,7 +224,8 @@ namespace MyRnD.AdventCode2019.Parts
                             {
                                 movingCursor.Y = currentPosition.Y + inc;
                                 var currentCell = grid[movingCursor.X, movingCursor.Y];
-                                UpdateGridCell(currentCell, grid, movingCursor, CellHorizontalWire, step);
+                                //previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, CellHorizontalWire, step);
+                                previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, (char) wireNumber, step);
                             }
                         }
                             break;
@@ -224,7 +237,8 @@ namespace MyRnD.AdventCode2019.Parts
                             {
                                 movingCursor.X = currentPosition.X - inc;
                                 var currentCell = grid[movingCursor.X, movingCursor.Y];
-                                UpdateGridCell(currentCell, grid, movingCursor, CellVerticalWire, step);
+                                //previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, CellVerticalWire, step);
+                                previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, (char)wireNumber, step);
                             }
                         }
                             break;
@@ -236,7 +250,8 @@ namespace MyRnD.AdventCode2019.Parts
                             {
                                 movingCursor.X = currentPosition.X + inc;
                                 var currentCell = grid[movingCursor.X, movingCursor.Y];
-                                UpdateGridCell(currentCell, grid, movingCursor, CellVerticalWire, step);
+                                //previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, CellVerticalWire, step);
+                                previousCell = UpdateGridCell(currentCell, previousCell, grid, movingCursor, (char)wireNumber, step);
                             }
                         }
                             break;
@@ -252,35 +267,110 @@ namespace MyRnD.AdventCode2019.Parts
             }
 
             List<Point> intersections = new List<Point>();
+            for (int w = 0; w <= horizontalBound; w++)
+            {
+                for (int h = 0; h <= verticalBound; h++)
+                {
+                    if (grid[w, h] == CellCrossedWire)
+                    {
+                        var newIntersection = new Point(w, h);
+                        intersections.Add(newIntersection);
+                    }
+                }
+            }
 
+            Point closestPoint = centralPortOrigin;
+            foreach (var intersectionPoint in intersections)
+            {
+                int distanceX = centralPortOrigin.X - intersectionPoint.X;
+                distanceX = distanceX >= 0 ? distanceX : -distanceX;
+                int distanceY = centralPortOrigin.Y - intersectionPoint.Y;
+                distanceY = distanceY >= 0 ? distanceY : -distanceY;
+                int tempClosestDistance = Math.Min(closestDistance, distanceX + distanceY);
+                if (tempClosestDistance != closestDistance)
+                {
+                    closestPoint = intersectionPoint;
+                    closestDistance = tempClosestDistance;
+                }
+            }
 
-            return (closestDistance, grid);
+            return (closestDistance, grid, intersections, closestPoint);
         }
 
-        private static void UpdateGridCell(char currentCell, char[,] grid, Point currentPosition, char updateCellValueWith, string step)
+        public string GridToString(char[,] grid)
         {
+            int horizontalBound = grid.GetUpperBound(0);
+            int verticalBound = grid.GetUpperBound(1);
+            var sb = new StringBuilder();
+            for (int w = 0; w <= horizontalBound; w++)
+            {
+                for (int h = 0; h <= verticalBound; h++)
+                {
+                    sb.Append(grid[w, h]);
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
+
+        public string VerticalInvertedGridToString(char[,] grid)
+        {
+            int horizontalBound = grid.GetUpperBound(0);
+            int verticalBound = grid.GetUpperBound(1);
+            var sb = new StringBuilder();
+            for (int w = horizontalBound; w >= 0; w--)
+            {
+                for (int h = 0; h <= verticalBound; h++)
+                {
+                    sb.Append(grid[w, h]);
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
+
+
+        #region Helpers
+
+        private static char UpdateGridCell(char currentCell, char previousCell, char[,] grid, Point currentPosition, char updateCellValueWith, string step)
+        {
+            char result = currentCell;
             if (currentCell != CellCrossedWire && currentCell != CellCentralPort)
             {
                 if (currentCell == CellEmpty)
-                    grid[currentPosition.X, currentPosition.Y] = updateCellValueWith;
+                {
+                    updateCellValueWith = (previousCell == updateCellValueWith ||
+                                           previousCell == CellCentralPort ||
+                                           previousCell == CellTurnedWire ||
+                                           previousCell == CellCrossedWire ||
+                                           previousCell == CellEmpty) ? updateCellValueWith : CellTurnedWire;
+                    result = grid[currentPosition.X, currentPosition.Y] = updateCellValueWith;
+
+                }
+                else if (currentCell == updateCellValueWith &&
+                         (updateCellValueWith == '1' | updateCellValueWith == '2'))
+                    result = grid[currentPosition.X, currentPosition.Y] = updateCellValueWith;
+                else if (currentCell != updateCellValueWith &&
+                         (updateCellValueWith == '1' | updateCellValueWith == '2'))
+                    result = grid[currentPosition.X, currentPosition.Y] = CellCrossedWire;
                 else if (currentCell == CellHorizontalWire ||
-                         currentCell == CellVerticalWire)
-                    grid[currentPosition.X, currentPosition.Y] = CellCrossedWire;
+                         currentCell == CellVerticalWire ||
+                         currentCell == CellTurnedWire)
+                    result = grid[currentPosition.X, currentPosition.Y] = CellCrossedWire;
                 else
                     throw new InvalidOperationException(
-                        $"Unknown cell '{currentCell}' at position [{currentPosition.X}, {currentPosition.Y}] for step '{step}'");
+                        $"Unknown cell '{currentCell}' at position [{currentPosition.X}, {currentPosition.Y}] for step '{step}' updating with '{updateCellValueWith}'");
             }
+            return result;
         }
-
-        #region Helpers
 
         private Size CalculatePanelSize()
         {
             if (_panelSize == null)
             {
                 var fullBox = FullBox;
-                int width = (int)Math.Ceiling((decimal)Math.Abs(fullBox.LeftBottom.X - fullBox.RightTop.X));
-                int height = (int)Math.Ceiling((decimal)Math.Abs(fullBox.LeftBottom.Y - fullBox.RightTop.Y));
+                int width = Math.Abs(fullBox.LeftBottom.X - fullBox.RightTop.X) + 1;
+                int height = Math.Abs(fullBox.LeftBottom.Y - fullBox.RightTop.Y) + 1;
                 _panelSize = new Size(width, height);
             }
             return _panelSize;
