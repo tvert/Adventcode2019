@@ -47,8 +47,10 @@ namespace MyRnD.AdventCode2019.ConsoleApp
                 Console.WriteLine($"The boxing rectangle for those crossed wires is defined as '{crossedWiresResolver.FullBox}'.");
                 Console.WriteLine();
 
-                (int closest, char[,] grid, List<Point> intersections, Point closestPoint) = crossedWiresResolver.DistanceCentralPortToClosestIntersection();
-                Console.WriteLine($"The closest distance is '{closest}' for point {closestPoint} (there are #{intersections.Count} intersection points in total.");
+                int closestDistance = crossedWiresResolver.ClosestIntersectionDistance;
+                Point closestPoint = crossedWiresResolver.ClosestIntersectionPoint;
+                List<Point> intersections = crossedWiresResolver.Intersections;
+                Console.WriteLine($"The closest distance is '{closestDistance}' for point {closestPoint} (there are #{intersections.Count} intersection points in total.");
                 Console.WriteLine();
             }
             catch (Exception ex)
