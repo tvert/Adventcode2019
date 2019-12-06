@@ -15,6 +15,9 @@ namespace MyRnD.AdventCode2019.Parts
         private Point _closestIntersectionPoint;
         private char[,] _visualGrid;
         private List<Point> _intersections;
+        private int? _minSignalDelaySteps;
+        private WirePoint _minSignalDelayPoint;
+        private List<WirePoint> _wpintersections;
 
         public CircuitPanel(List<WirePath> wirePaths, CrossedWiresResolver crossedWiresResolver)
         {
@@ -36,15 +39,21 @@ namespace MyRnD.AdventCode2019.Parts
 
         public List<Point> Intersections => _intersections ?? GenerateIntersections();
 
+        public int MinSignalDelaySteps => _minSignalDelaySteps ?? CalculateMinSignalDelaySteps();
+
+        public WirePoint MinSignalDelayPoint => _minSignalDelayPoint ?? CalculateMinSignalDelayPoint();
+
+        public List<WirePoint> WirePointIntersections => _wpintersections ?? GenerateWirePointIntersections();
+
         public string VisualGridToString()
         {
             var visualGrid = VisualGrid;
             int horizontalBound = visualGrid.GetUpperBound(0);
             int verticalBound = visualGrid.GetUpperBound(1);
             var sb = new StringBuilder();
-            for (int w = 0; w <= horizontalBound; w++)
+            for (int h = 0; h <= verticalBound; h++)
             {
-                for (int h = 0; h <= verticalBound; h++)
+                for (int w = 0; w <= horizontalBound; w++)
                 {
                     sb.Append(visualGrid[w, h]);
                 }
@@ -59,9 +68,9 @@ namespace MyRnD.AdventCode2019.Parts
             int horizontalBound = visualGrid.GetUpperBound(0);
             int verticalBound = visualGrid.GetUpperBound(1);
             var sb = new StringBuilder();
-            for (int w = horizontalBound; w >= 0; w--)
+            for (int h = verticalBound; h >= 0; h--)
             {
-                for (int h = 0; h <= verticalBound; h++)
+                for (int w = 0; w <= horizontalBound; w++)
                 {
                     sb.Append(visualGrid[w, h]);
                 }
@@ -139,5 +148,34 @@ namespace MyRnD.AdventCode2019.Parts
         }
         #endregion
 
+        #region Helpers Part B - Signal Delay
+
+        private int CalculateMinSignalDelaySteps()
+        {
+            DoAndUpdateMinSignalDelay();
+            return _minSignalDelaySteps ?? 0;
+        }
+
+        private WirePoint CalculateMinSignalDelayPoint()
+        {
+            DoAndUpdateMinSignalDelay();
+            return _minSignalDelayPoint;
+        }
+
+        private List<WirePoint> GenerateWirePointIntersections()
+        {
+            _wpintersections = _crossedWiresResolver.FindIntersectionPoints(WirePaths);
+            return _wpintersections;
+        }
+
+        private void DoAndUpdateMinSignalDelay()
+        {
+            (int minSignalDelaySteps,  WirePoint minSignalDelayPoint) = _crossedWiresResolver.MinSignalDelay(WirePaths, WirePointIntersections);
+
+            _minSignalDelaySteps = minSignalDelaySteps;
+            _minSignalDelayPoint = minSignalDelayPoint;
+        }
+
+        #endregion
     }
 }

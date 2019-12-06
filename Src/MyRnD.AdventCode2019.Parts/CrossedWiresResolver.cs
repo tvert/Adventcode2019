@@ -1,6 +1,7 @@
 ﻿using MyRnD.AdventCode2019.Parts.Math2D;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MyRnD.AdventCode2019.Parts
 {
@@ -50,7 +51,7 @@ namespace MyRnD.AdventCode2019.Parts
                     var newPosition = new Point(currentPosition.X, currentPosition.Y);
                     switch (pathOrientation)
                     {
-                        case "L":
+                        case "D":
                             {
                                 newPosition.Y -= increment;
                                 var movingCursor = new Point(currentPosition.X, currentPosition.Y);
@@ -63,7 +64,7 @@ namespace MyRnD.AdventCode2019.Parts
                                 }
                             }
                             break;
-                        case "R":
+                        case "U":
                             {
                                 newPosition.Y += increment;
                                 var movingCursor = new Point(currentPosition.X, currentPosition.Y);
@@ -76,7 +77,7 @@ namespace MyRnD.AdventCode2019.Parts
                                 }
                             }
                             break;
-                        case "D":
+                        case "L":
                             {
                                 newPosition.X -= increment;
                                 var movingCursor = new Point(currentPosition.X, currentPosition.Y);
@@ -89,7 +90,7 @@ namespace MyRnD.AdventCode2019.Parts
                                 }
                             }
                             break;
-                        case "U":
+                        case "R":
                             {
                                 newPosition.X += increment;
                                 var movingCursor = new Point(currentPosition.X, currentPosition.Y);
@@ -142,6 +143,85 @@ namespace MyRnD.AdventCode2019.Parts
             }
 
             return (closestDistance, grid, intersections, closestPoint);
+        }
+
+        public (int minSignalDelaySteps, WirePoint minSignalDelayPoint) MinSignalDelay(IReadOnlyList<WirePath> wirePaths, List<WirePoint> intersectionsWirePoints)
+        {
+            //// Array to keep the steps for each 
+            //int[,] wiresSteps = new int[wirePaths.Count,intersections.Count];
+
+            var crossedWirePoints = new List<WirePoint>();
+            foreach (var point in intersectionsWirePoints)
+            {
+                crossedWirePoints.Add(new WirePoint(point.X, point.Y, true, 0));
+            }
+
+            foreach (var crossedPoint in crossedWirePoints)
+            {
+                foreach (var wire in wirePaths)
+                {
+                    var commonPoints = wire.WirePoints.FindAll(p => p.X == crossedPoint.X && p.Y == crossedPoint.Y);
+                    if (commonPoints.Any())
+                    {
+                        var minimumSteps = commonPoints.Min(p => p.Steps);
+                        crossedPoint.Steps += minimumSteps;
+                    }
+                }
+            }
+
+            WirePoint minSignalDelayPoint = null;
+            foreach (var crossedPoint in crossedWirePoints)
+            {
+                if (minSignalDelayPoint == null)
+                    minSignalDelayPoint = crossedPoint;
+                else
+                {
+                    if (crossedPoint.Steps < minSignalDelayPoint.Steps)
+                        minSignalDelayPoint = crossedPoint;
+                }
+            }
+
+            return (minSignalDelayPoint.Steps, minSignalDelayPoint);
+        }
+
+        public List<WirePoint> FindIntersectionPoints(IReadOnlyList<WirePath> wirePaths)
+        {
+            var crossedWirePoints = new List<WirePoint>();
+
+            if (wirePaths.Count > 1)
+            {
+                for (int wirePathIndex1 = 0; wirePathIndex1 < wirePaths.Count - 1; wirePathIndex1++)
+                {
+                    var firstWirePoints = wirePaths[wirePathIndex1].WirePoints;
+                    for (int wirePathIndex2 = wirePathIndex1 + 1; wirePathIndex2 < wirePaths.Count; wirePathIndex2++)
+                    {
+                        var secondWirePoints = wirePaths[wirePathIndex2].WirePoints;
+                        foreach (var wpt1 in firstWirePoints)
+                        {
+                            foreach (var wpt2 in secondWirePoints)
+                            {
+                                if (!wpt1.AreSameCoordinate(wpt2))
+                                    continue;
+                                wpt1.IsCrossed = true;
+                                wpt2.IsCrossed = true;
+                                WirePoint wptWithMinSteps = wpt1.Steps < wpt2.Steps ? wpt1 : wpt2;
+                                var existingWirePoint = crossedWirePoints.Find(p => p.AreSameCoordinate(wpt1));
+                                if (existingWirePoint == null)
+                                {
+                                    // Add the new crossed wire point.
+                                    crossedWirePoints.Add(new WirePoint(wptWithMinSteps));
+                                }
+                                else
+                                {
+                                    // Update the existing node with the minimum of steps
+                                    existingWirePoint.Steps = Math.Min(existingWirePoint.Steps, wptWithMinSteps.Steps);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return crossedWirePoints;
         }
 
         #region Helpers - Calculate Intersection points and find the closest in terms of Taxicab geometry / Manhattan distance.

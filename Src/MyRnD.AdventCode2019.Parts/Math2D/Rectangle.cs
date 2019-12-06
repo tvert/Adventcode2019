@@ -33,12 +33,22 @@ namespace MyRnD.AdventCode2019.Parts.Math2D
 
         public Point RightTop { get; }
 
+        public void AdjustDimensionToIncludePoint(WirePoint newPoint)
+        {
+            AdjustDimensionToIncludePoint(newPoint.X, newPoint.Y);
+        }
+
         public void AdjustDimensionToIncludePoint(Point newPoint)
         {
-            LeftBottom.X = Math.Min(newPoint.X, LeftBottom.X);
-            LeftBottom.Y = Math.Min(newPoint.Y, LeftBottom.Y);
-            RightTop.X = Math.Max(newPoint.X, RightTop.X);
-            RightTop.Y = Math.Max(newPoint.Y, RightTop.Y);
+            AdjustDimensionToIncludePoint(newPoint.X, newPoint.Y);
+        }
+
+        public void AdjustDimensionToIncludePoint(int newPointX, int newPointY)
+        {
+            LeftBottom.X = Math.Min(newPointX, LeftBottom.X);
+            LeftBottom.Y = Math.Min(newPointY, LeftBottom.Y);
+            RightTop.X = Math.Max(newPointX, RightTop.X);
+            RightTop.Y = Math.Max(newPointY, RightTop.Y);
         }
 
         public override string ToString()
