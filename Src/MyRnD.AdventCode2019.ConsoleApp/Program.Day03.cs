@@ -39,6 +39,7 @@ namespace MyRnD.AdventCode2019.ConsoleApp
                 Console.WriteLine($"An error occured '{ex.Message}'.{Environment.NewLine}Details: '{ex}'");
             }
         }
+
         private static void Day03_B()
         {
             const string defaultFilename = "CrossedWires-MyInput.txt";

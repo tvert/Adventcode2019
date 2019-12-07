@@ -9,6 +9,11 @@ namespace MyRnD.AdventCode2019.Parts
     {
         const int BufferSize = 1024;
 
+        public PasswordEvaluator CreatePasswordEvaluator()
+        {
+            return new PasswordEvaluator();
+        }
+
         public CrossedWiresResolver CreateCrossedWiresResolver()
         {
             return new CrossedWiresResolver();
