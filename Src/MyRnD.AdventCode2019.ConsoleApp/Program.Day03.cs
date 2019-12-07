@@ -58,11 +58,11 @@ namespace MyRnD.AdventCode2019.ConsoleApp
                     $"The boxing rectangle for those crossed wires is defined within '{circuitPanel.FullBox}'.");
                 Console.WriteLine();
 
-                int closestDistance = circuitPanel.ClosestIntersectionDistance;
-                Point closestPoint = circuitPanel.ClosestIntersectionPoint;
-                List<Point> intersections = circuitPanel.Intersections;
+                var minimumSteps = circuitPanel.MinSignalDelaySteps;
+                var wpMinDelayPoint = circuitPanel.MinSignalDelayPoint;
+
                 Console.WriteLine(
-                    $"The closest distance from central port to the intersection point {closestPoint} is '{closestDistance}' (there are #{intersections.Count} intersection points in total.");
+                    $"The shortest distance for all signal to cross is at point {wpMinDelayPoint} with '{minimumSteps}' steps.");
                 Console.WriteLine();
             }
             catch (Exception ex)
