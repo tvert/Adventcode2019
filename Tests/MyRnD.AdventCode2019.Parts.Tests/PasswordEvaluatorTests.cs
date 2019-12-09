@@ -102,7 +102,7 @@ namespace MyRnD.AdventCode2019.Parts.Tests
 
             // Assert
             Assert.IsFalse(isValid, number.ToString());
-            Assert.AreEqual("Rule 5 is broken: the two adjacent matching digits are not part of a larger group of matching digits '123444'  | 4 => '44' | 4 => '444'",
+            Assert.AreEqual("Rule 5 is broken: the two adjacent matching digits are not part of a larger group of matching digits '123444'  Adjacent: '444'",
                 errorMsg, number.ToString());
         }
 
@@ -124,7 +124,7 @@ namespace MyRnD.AdventCode2019.Parts.Tests
         public void PasswordEvaluator_ValidateNumber2_AllValid()
         {
             // Arrange
-            int[] numbers = { 377788, 377799, 111122, 778899, 111557, 447899 };
+            int[] numbers = { 377788, 377799, 447888, 111122, 778899, 111557, 447899, 778889 };
 
             // Act
             foreach (var number in numbers)
@@ -141,7 +141,7 @@ namespace MyRnD.AdventCode2019.Parts.Tests
         public void PasswordEvaluator_ValidateNumber2_AllInvalid()
         {
             // Arrange
-            int[] numbers = { 111222, 778889, 111555, 447888 };
+            int[] numbers = { 111222, 111555 };
 
             // Act
             foreach (var number in numbers)
