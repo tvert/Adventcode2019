@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace MyRnD.AdventCode2019.Parts
 {
@@ -162,39 +164,47 @@ namespace MyRnD.AdventCode2019.Parts
 
         private (bool isValid, string errorMsg) ValidateNumber5(int number)
         {
-            string[] twoAdjacent = new[] { "00", "11", "22", "33", "44", "55", "66", "77", "88", "99" };
             string numberAsString = number.ToString();
-
-            // Rule 5: the two adjacent matching digits are not part of a larger group of matching digits
-            int hightest2Adjacent = -1;
-            bool has2Adjacent;
-            for(int i = 0; i < twoAdjacent.Length; i++)
+            List<string> adjacentNumbers = new List<string>();
+            var adjacentNumber = new StringBuilder();
+            int previousIdx = 0;
+            for (int i = 0; i < numberAsString.Length; i++)
             {
-                var twoDigits = twoAdjacent[i];
-                has2Adjacent = numberAsString.IndexOf(twoDigits, StringComparison.Ordinal) >= 0;
-                hightest2Adjacent = has2Adjacent ? i : hightest2Adjacent;
+                if (i == 0)
+                {
+                    adjacentNumber.Append(numberAsString[i]);
+                    previousIdx = i;
+                }
+                else if (numberAsString[previousIdx] == numberAsString[i])
+                {
+                    adjacentNumber.Append(numberAsString[i]);
+                    previousIdx = i;
+                }
+                else
+                {
+                    if (adjacentNumber.Length > 1)
+                        adjacentNumbers.Add(adjacentNumber.ToString());
+                    adjacentNumber = new StringBuilder();
+                    adjacentNumber.Append(numberAsString[i]);
+                    previousIdx = i;
+                }
             }
 
-            string[] threeAdjacent = new[] { "000", "111", "222", "333", "444", "555", "666", "777", "888", "999" };
-            int hightest3Adjacent = -1;
+            if (adjacentNumber.Length > 1)
+                adjacentNumbers.Add(adjacentNumber.ToString());
 
-            bool has3Adjacent;
-            for (int i = 0; i < twoAdjacent.Length; i++)
-            {
-                var twoDigits = threeAdjacent[i];
-                has3Adjacent = numberAsString.IndexOf(twoDigits, StringComparison.Ordinal) >= 0;
-                hightest3Adjacent = has3Adjacent ? i : hightest3Adjacent;
-            }
+            if (!adjacentNumbers.Any())
+                return (false, $"Rule 3 is broken: Two adjacent digits are the same (like 22 in 122345) '{number}'.");
 
-            bool ruleSuccess5 = (hightest3Adjacent < 0 || hightest3Adjacent < hightest2Adjacent);
+            // Has 2 Adjacent at least 
+            bool ruleSuccess5 = adjacentNumbers.Exists(a => a.Length == 2);
+
             if (!ruleSuccess5)
                 return (false,
                     $"Rule 5 is broken: the two adjacent matching digits are not part of a larger group of matching digits '{number}' " +
-                    $" | {hightest2Adjacent} => '{twoAdjacent[hightest2Adjacent]}'" +
-                    $" | {hightest3Adjacent} => '{(hightest3Adjacent >=0 ? threeAdjacent[hightest3Adjacent] : String.Empty)}'");
+                    $" Adjacent: '{adjacentNumbers.Aggregate((i, j) => i + ',' + j)}'");
 
             return (true, null);
         }
-
     }
 }

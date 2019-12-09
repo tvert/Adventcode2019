@@ -124,7 +124,7 @@ namespace MyRnD.AdventCode2019.Parts.Tests
         public void PasswordEvaluator_ValidateNumber2_AllValid()
         {
             // Arrange
-            int[] numbers = {111122, 778899, 111557, 447899 };
+            int[] numbers = { 377788, 377799, 111122, 778899, 111557, 447899 };
 
             // Act
             foreach (var number in numbers)
@@ -211,6 +211,10 @@ namespace MyRnD.AdventCode2019.Parts.Tests
             Assert.AreEqual(481, actualPossibleCombinations1, rangeAsString);
             Assert.AreEqual(481, validNumbers1.Count);
             Assert.AreEqual(481, validNumbers2.Count + numbersFailingRule5.Count);
+
+            Assert.AreEqual(299, actualPossibleCombinations2);
+            Assert.AreEqual(299, validNumbers2.Count);
+
         }
 
 
