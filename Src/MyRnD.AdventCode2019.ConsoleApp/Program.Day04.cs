@@ -1,5 +1,6 @@
 ﻿using MyRnD.AdventCode2019.Parts;
 using System;
+using System.Collections.Generic;
 
 namespace MyRnD.AdventCode2019.ConsoleApp
 {
@@ -16,9 +17,9 @@ namespace MyRnD.AdventCode2019.ConsoleApp
 
                 var factory = new Factory();
                 PasswordEvaluator passwordEvaluator = factory.CreatePasswordEvaluator();
-                int h = passwordEvaluator.CalculatePuzzleCombination(myInput);
+                (int totalCombinations, List<int> validNumbers) = passwordEvaluator.CalculatePuzzleCombination1(myInput);
 
-                Console.WriteLine($"There are #{h} different passwords possible for {myInput}.");
+                Console.WriteLine($"There are #{totalCombinations} different passwords possible for {myInput}.");
                 Console.WriteLine();
             }
             catch (Exception ex)

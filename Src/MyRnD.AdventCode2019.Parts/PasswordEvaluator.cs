@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MyRnD.AdventCode2019.Parts
 {
@@ -26,8 +27,9 @@ namespace MyRnD.AdventCode2019.Parts
     {
         public const char RangeSeparatorChar = '-';
 
-        public int CalculatePuzzleCombination(string rangeAsString)
+        public (int totalCombinations, List<int> validNumbers) CalculatePuzzleCombination1(string rangeAsString)
         {
+            List<int> validNumbers = new List<int>();
             int totalCombinations = 0;
             int totalWrong = 0;
 
@@ -39,9 +41,12 @@ namespace MyRnD.AdventCode2019.Parts
             // Bypassing Rule 2 with the for loop.
             for (int i = lowerRange; i <= higherRange; i++)
             {
-                (bool isValid, string errorMsg) = ValidateNumber2(i, null, null);
+                (bool isValid, _) = ValidateNumber1To4(i, null, null);
                 if (isValid)
+                {
                     totalCombinations++;
+                    validNumbers.Add(i);
+                }
                 else
                     totalWrong++;
             }
@@ -51,10 +56,42 @@ namespace MyRnD.AdventCode2019.Parts
                 throw new InvalidOperationException($"Missing validations [Lower: {lowerRange}, Higher: {higherRange}] => {rangeTotal} | " +
                                                     $"[Valid: {totalCombinations}, Wrong: {totalWrong}] => {totalCombinations + totalWrong}.");
 
-            return totalCombinations;
+            return (totalCombinations, validNumbers);
         }
 
-        public (bool isValid, string errorMsg) ValidateNumber(int number, int? lowerLimit, int? higherLimit)
+        public (int totalCombinations, List<int> validNumbers) CalculatePuzzleCombination2(string rangeAsString)
+        {
+            List<int> validNumbers = new List<int>();
+            int totalCombinations = 0;
+            int totalWrong = 0;
+
+            string[] ranges = rangeAsString.Split(RangeSeparatorChar);
+
+            int lowerRange = int.Parse(ranges[0]);
+            int higherRange = int.Parse(ranges[1]);
+
+            // Bypassing Rule 2 with the for loop.
+            for (int i = lowerRange; i <= higherRange; i++)
+            {
+                (bool isValid, _) = ValidateNumber1To5(i, null, null);
+                if (isValid)
+                {
+                    totalCombinations++;
+                    validNumbers.Add(i);
+                }
+                else
+                    totalWrong++;
+            }
+
+            int rangeTotal = higherRange - lowerRange + 1;
+            if (rangeTotal != totalCombinations + totalWrong)
+                throw new InvalidOperationException($"Missing validations [Lower: {lowerRange}, Higher: {higherRange}] => {rangeTotal} | " +
+                                                    $"[Valid: {totalCombinations}, Wrong: {totalWrong}] => {totalCombinations + totalWrong}.");
+
+            return (totalCombinations, validNumbers);
+        }
+
+        public (bool isValid, string errorMsg) ValidateNumber1To4(int number, int? lowerLimit, int? higherLimit)
         {
             // Validate the rules
             // Rule 1: It is a six-digit number.
@@ -73,7 +110,7 @@ namespace MyRnD.AdventCode2019.Parts
             bool rule3Success = false;
             foreach (var twoDigits in twoAdjacent)
             {
-                rule3Success = numberAsString.IndexOf(twoDigits) >= 0;
+                rule3Success = numberAsString.IndexOf(twoDigits, StringComparison.Ordinal) >= 0;
                 if (rule3Success)
                     break;
             }
@@ -111,52 +148,26 @@ namespace MyRnD.AdventCode2019.Parts
         /// <param name="lowerLimit"></param>
         /// <param name="higherLimit"></param>
         /// <returns></returns>
-
-        public (bool isValid, string errorMsg) ValidateNumber2(int number, int? lowerLimit, int? higherLimit)
+        public (bool isValid, string errorMsg) ValidateNumber1To5(int number, int? lowerLimit, int? higherLimit)
         {
-            // Validate the rules
-            // Rule 1: It is a six-digit number.
-            if (number < 100000 || number > 999999)
-                return (false, $"Rule 1 is broken: It is a six-digit number '{number}'.");
+            (bool isValid, string errorMsg) = ValidateNumber1To4(number, lowerLimit, higherLimit);
+            if (isValid)
+            {
+                (bool isValid5, string errorMsg5) = ValidateNumber5(number);
+                return (isValid5, errorMsg5);
+            }
 
-            // Rule 2: The value is within the range given in your puzzle input.
-            if (lowerLimit.HasValue && higherLimit.HasValue &&
-                number > lowerLimit && number < higherLimit)
-                return (false,
-                    $"Rule 2 is broken: The value is within the range given in your puzzle input '{number}' [{lowerLimit}, {higherLimit}].");
+            return (false, errorMsg);
+        }
 
-            // Rule 3: Two adjacent digits are the same (like 22 in 122345).
+        private (bool isValid, string errorMsg) ValidateNumber5(int number)
+        {
             string[] twoAdjacent = new[] { "00", "11", "22", "33", "44", "55", "66", "77", "88", "99" };
             string numberAsString = number.ToString();
-            {
-                bool ruleSuccess3 = false;
-                foreach (var twoDigits in twoAdjacent)
-                {
-                    ruleSuccess3 = numberAsString.IndexOf(twoDigits, StringComparison.Ordinal) >= 0;
-                    if (ruleSuccess3)
-                        break;
-                }
-
-                if (!ruleSuccess3)
-                    return (false,
-                        $"Rule 3 is broken: Two adjacent digits are the same (like 22 in 122345) '{number}'.");
-            }
-
-            // Rule 4: Going from left to right, the digits never decrease; they only ever increase or stay the same (like 111123 or 135679).
-            char previousChar = '0';
-            for (int i = 0; i < numberAsString.Length; i++)
-            {
-                char currentChar = numberAsString[i];
-                if (currentChar < previousChar)
-                    return (false, $"Rule 4 is broken: " +
-                                   $"Going from left to right, the digits never decrease; they only ever increase or stay the same (like 111123 or 135679) " +
-                                   $"'{previousChar}{currentChar}' (at position {i + 1}).");
-                previousChar = currentChar;
-            }
 
             // Rule 5: the two adjacent matching digits are not part of a larger group of matching digits
             int hightest2Adjacent = -1;
-            bool has2Adjacent = false;
+            bool has2Adjacent;
             for(int i = 0; i < twoAdjacent.Length; i++)
             {
                 var twoDigits = twoAdjacent[i];
@@ -167,7 +178,7 @@ namespace MyRnD.AdventCode2019.Parts
             string[] threeAdjacent = new[] { "000", "111", "222", "333", "444", "555", "666", "777", "888", "999" };
             int hightest3Adjacent = -1;
 
-            bool has3Adjacent = false;
+            bool has3Adjacent;
             for (int i = 0; i < twoAdjacent.Length; i++)
             {
                 var twoDigits = threeAdjacent[i];

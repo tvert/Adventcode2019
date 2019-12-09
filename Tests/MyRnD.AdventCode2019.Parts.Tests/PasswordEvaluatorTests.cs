@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MyRnD.AdventCode2019.Parts.Tests
@@ -32,7 +35,7 @@ namespace MyRnD.AdventCode2019.Parts.Tests
             const int number = 111111;
 
             // Act
-            (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber(number, LowerLimit, HigherLimit);
+            (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber1To4(number, LowerLimit, HigherLimit);
 
             // Assert
             Assert.IsTrue(isValid, errorMsg);
@@ -46,7 +49,7 @@ namespace MyRnD.AdventCode2019.Parts.Tests
             const int number = 223450;
 
             // Act
-            (bool isValid, string errorMsg)  = _passwordEvaluator.ValidateNumber(number, LowerLimit, HigherLimit);
+            (bool isValid, string errorMsg)  = _passwordEvaluator.ValidateNumber1To4(number, LowerLimit, HigherLimit);
 
             // Assert
             Assert.IsFalse(isValid, number.ToString());
@@ -62,7 +65,7 @@ namespace MyRnD.AdventCode2019.Parts.Tests
             const int number = 123789;
 
             // Act
-            (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber(number, LowerLimit, HigherLimit);
+            (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber1To4(number, LowerLimit, HigherLimit);
 
             // Assert
             Assert.IsFalse(isValid, number.ToString());
@@ -81,7 +84,7 @@ namespace MyRnD.AdventCode2019.Parts.Tests
             const int number = 112233;
 
             // Act
-            (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber2(number, null, null);
+            (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber1To5(number, null, null);
 
             // Assert
             Assert.IsTrue(isValid, errorMsg);
@@ -95,7 +98,7 @@ namespace MyRnD.AdventCode2019.Parts.Tests
             const int number = 123444;
 
             // Act
-            (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber2(number, null, null);
+            (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber1To5(number, null, null);
 
             // Assert
             Assert.IsFalse(isValid, number.ToString());
@@ -110,7 +113,7 @@ namespace MyRnD.AdventCode2019.Parts.Tests
             const int number = 111122;
 
             // Act
-            (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber2(number, null, null);
+            (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber1To5(number, null, null);
 
             // Assert
             Assert.IsTrue(isValid, errorMsg);
@@ -126,7 +129,7 @@ namespace MyRnD.AdventCode2019.Parts.Tests
             // Act
             foreach (var number in numbers)
             {
-                (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber2(number, null, null);
+                (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber1To5(number, null, null);
                 // Assert
                 Assert.IsTrue(isValid, errorMsg);
                 Assert.IsNull(errorMsg, errorMsg);
@@ -143,7 +146,7 @@ namespace MyRnD.AdventCode2019.Parts.Tests
             // Act
             foreach (var number in numbers)
             {
-                (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber2(number, null, null);
+                (bool isValid, string errorMsg) = _passwordEvaluator.ValidateNumber1To5(number, null, null);
                 // Assert
                 Assert.IsFalse(isValid, number.ToString());
             }
@@ -158,14 +161,58 @@ namespace MyRnD.AdventCode2019.Parts.Tests
         public void PasswordEvaluator_CalculatePuzzleCombination_MyInput()
         {
             // Arrange
-            const string puzzle = "372037-905157";
+            const string rangeAsString = "372037-905157";
 
             // Act
-            var actualPossibleCombinations = _passwordEvaluator.CalculatePuzzleCombination(puzzle);
+            (int actualPossibleCombinations, _) = _passwordEvaluator.CalculatePuzzleCombination1(rangeAsString);
 
             // Assert
-            Assert.AreEqual(481, actualPossibleCombinations, puzzle);
+            Assert.AreEqual(481, actualPossibleCombinations, rangeAsString);
         }
+
+        [TestMethod]
+        public void PasswordEvaluator_CalculatePuzzleCombination2_MyInput()
+        {
+            // Arrange
+            const string rangeAsString = "372037-905157";
+
+            // Act
+            (int actualPossibleCombinations1, List<int> validNumbers1) = _passwordEvaluator.CalculatePuzzleCombination1(rangeAsString);
+            (int actualPossibleCombinations2, List<int> validNumbers2) = _passwordEvaluator.CalculatePuzzleCombination2(rangeAsString);
+
+            var sb2 = new StringBuilder("Valid Numbers after rule 1 to 5:").AppendLine();
+            foreach (var number2 in validNumbers2)
+            {
+                sb2.AppendLine($"- {number2}");
+            }
+
+            var sb1 = new StringBuilder("Valid Numbers after rule 1 to 4:").AppendLine();
+            var sb5 = new StringBuilder("Valid Numbers removed by 5:").AppendLine();
+            List<int> numbersFailingRule5 = new List<int>();
+            foreach (var number1 in validNumbers1)
+            {
+                if (!validNumbers2.Contains(number1))
+                {
+                    numbersFailingRule5.Add(number1);
+                    sb1.AppendLine($"- {number1} *** Removed by rule 5");
+                    sb5.AppendLine($"- {number1}");
+                }
+                else
+                {
+                    sb1.AppendLine($"- {number1}");
+                }
+            }
+
+            Console.WriteLine(sb1.ToString());
+            Console.WriteLine(sb2.ToString());
+            Console.WriteLine(sb5.ToString());
+
+            // Assert
+            Assert.AreEqual(481, actualPossibleCombinations1, rangeAsString);
+            Assert.AreEqual(481, validNumbers1.Count);
+            Assert.AreEqual(481, validNumbers2.Count + numbersFailingRule5.Count);
+        }
+
 
         #endregion
     }
