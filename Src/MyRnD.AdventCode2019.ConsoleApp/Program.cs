@@ -22,10 +22,15 @@ namespace MyRnD.AdventCode2019.ConsoleApp
             Day03_A();
             Separator(nameof(Program.Day03_B));
             Day03_B();
-#endif
 
             Separator(nameof(Program.Day04_A));
             Day04_A();
+#endif
+
+            Separator(nameof(Program.Day06_A));
+            Day06_A();
+            Separator(nameof(Program.Day06_B));
+            Day06_B();
 
             Console.WriteLine("PRESS ENTER TO STOP.");
             Console.ReadLine();

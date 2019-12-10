@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,26 @@ namespace MyRnD.AdventCode2019.Parts
     public sealed class Factory
     {
         const int BufferSize = 1024;
+
+        public UniversalOrbitMap CreateUniversalOrbitMapFromFile(string fullFileName)
+        {
+            var tempMap = new UniversalOrbitMap();
+            using (var fileStream = File.OpenRead(fullFileName))
+            using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, BufferSize))
+            {
+                string line;
+                while ((line = streamReader.ReadLine()) != null)
+                {
+                    // 1 orbit relation per line
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        tempMap.UpdateFromLine(line);
+                    }
+                }
+            }
+            return tempMap;
+        }
+
 
         public PasswordEvaluator CreatePasswordEvaluator()
         {
