@@ -19,7 +19,7 @@ namespace MyRnD.AdventCode2019.ConsoleApp
                 var factory = new Factory();
                 var intCodeComputer = factory.CreateIntCodeComputerFromFile(fullFilename);
                 Console.WriteLine(
-                    $"There are #{intCodeComputer.InitialOpCodes.Count} Op codes in this IntCode program.");
+                    $"There are #{intCodeComputer.InitialIntCodes.Count} Op codes in this IntCode program.");
                 Console.WriteLine();
 
                 var finalOpCodes = intCodeComputer.Run();
@@ -46,7 +46,7 @@ namespace MyRnD.AdventCode2019.ConsoleApp
                 var factory = new Factory();
                 var intCodeComputer = factory.CreateIntCodeComputerFromFile(fullFilename);
                 Console.WriteLine(
-                    $"There are #{intCodeComputer.InitialOpCodes.Count} Op codes in this IntCode program.");
+                    $"There are #{intCodeComputer.InitialIntCodes.Count} Op codes in this IntCode program.");
                 Console.WriteLine();
 
                 var finalOpCodes = intCodeComputer.Run();
