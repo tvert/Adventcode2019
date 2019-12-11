@@ -22,7 +22,7 @@
     <None Update="Day03\CrossedWires-MyInput.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Day05\IntCode-MyInput.txt">
+    <None Update="Day05\TEST_diagnostic.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Day06\UniversalOrbitMap.txt">

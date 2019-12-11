@@ -11,12 +11,14 @@ namespace MyRnD.AdventCode2019.Parts
     }
     public interface IOutputter
     {
+        List<int> OutputValues { get; }
+        
         void OutputValue(int valueToOutput);
     }
 
     #region Inputters & Outputters
 
-    public sealed class ConsoleInputer : IInputter
+    public sealed class ConsoleInputter : IInputter
     {
         public int InputValue()
         {
@@ -24,9 +26,14 @@ namespace MyRnD.AdventCode2019.Parts
         }
     }
 
-    public sealed class AutoInputer : IInputter
+    public sealed class AutoInputter : IInputter
     {
-        public int AutoValue { get; set; }
+        public AutoInputter(int autoValue)
+        {
+            AutoValue = autoValue;
+        }
+
+        public int AutoValue { get; private set; }
 
         public int InputValue()
         {
@@ -36,9 +43,17 @@ namespace MyRnD.AdventCode2019.Parts
 
     public sealed class ConsoleOutputter : IOutputter
     {
+        public ConsoleOutputter()
+        {
+            OutputValues = new List<int>();
+        }
+
+        public List<int> OutputValues { get; }
+
         public void OutputValue(int valueToOutput)
         {
             Console.WriteLine($"[Value: {valueToOutput} ]");
+            OutputValues.Add(valueToOutput);
         }
     }
 
@@ -46,21 +61,12 @@ namespace MyRnD.AdventCode2019.Parts
 
     public sealed class IntCodeComputer
     {
-        // OpCode 4 set structure : [OpCode, Input1, Input2, Output]
-        public const int OpCodeIndex = 0;
-        public const int Input1Index = 1;
-        public const int Input2Index = 2;
-        public const int OutputIndex = 3;
-
-        public const int OperationLength = 4;
-
-
         // Fields
         private readonly IInputter _inputter;
-        private readonly IOutputter _outputter;
+
 
         public IntCodeComputer(List<int> initialIntCodes)
-            : this(initialIntCodes, new AutoInputer {AutoValue = 0}, new ConsoleOutputter())
+            : this(initialIntCodes, new AutoInputter(0), new ConsoleOutputter())
         {
         }
 
@@ -73,10 +79,12 @@ namespace MyRnD.AdventCode2019.Parts
         {
             InitialIntCodes = initialIntCodes;
             _inputter = inputter;
-            _outputter = outputter;
+            Outputter = outputter;
         }
 
         public List<int> InitialIntCodes { get; private set; }
+
+        public IOutputter Outputter { get; private set; }
 
         public List<int> Run()
         {
@@ -117,6 +125,16 @@ namespace MyRnD.AdventCode2019.Parts
             int parameterMode2 = (currentInstruction / 1000) % 10;
             int parameterMode3 = (currentInstruction / 10000) % 10;
 
+#if DEBUG && false
+            int[] currentOperation = new int[OperationLength];
+            for (int s = currentInstructionIndex, t = 0; s < currentInstructionIndex + OperationLength; s++, t++)
+            {
+                currentOperation[t] = intCodes[s];
+            }
+
+            string currentOpAsString = string.Concat(currentOperation.Select(s => s + ", "));
+#endif
+
             if (currentOpCode.IsFinalOp())
             {
                 // We reach the end
@@ -151,7 +169,7 @@ namespace MyRnD.AdventCode2019.Parts
                 int outputValue = parameterMode1.IsPositionMode()
                     ? intCodes[intCodes[currentInstructionIndex + 1]]
                     : intCodes[currentInstructionIndex + 1];
-                _outputter.OutputValue(outputValue);
+                Outputter.OutputValue(outputValue);
                 newInstructionIndex += 2; // opCode + Index
             }
             else
@@ -163,6 +181,6 @@ namespace MyRnD.AdventCode2019.Parts
             return RunInternal(intCodes, newInstructionIndex);
         }
 
-        #endregion
+#endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -29,6 +28,14 @@ namespace MyRnD.AdventCode2019.Parts
             return tempMap;
         }
 
+        public IInputter CreateAutoInputter(int autoValue)
+        {
+            return new AutoInputter(autoValue);
+        }
+        public IOutputter CreateConsoleOutputter()
+        {
+            return new ConsoleOutputter();
+        }
 
         public PasswordEvaluator CreatePasswordEvaluator()
         {
@@ -65,6 +72,12 @@ namespace MyRnD.AdventCode2019.Parts
 
         public IntCodeComputer CreateIntCodeComputerFromFile(string fullFileName)
         {
+            return CreateIntCodeComputerFromFile(fullFileName, CreateAutoInputter(0), CreateConsoleOutputter());
+        }
+
+        public IntCodeComputer CreateIntCodeComputerFromFile(
+            string fullFileName, IInputter inputter, IOutputter outputter)
+        {
             List<int> opCodes = new List<int>();
             using (var fileStream = File.OpenRead(fullFileName))
             using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, BufferSize))
@@ -81,7 +94,7 @@ namespace MyRnD.AdventCode2019.Parts
                     }
                 }
             }
-            var tempIntCodeComputer = new IntCodeComputer(opCodes.ToList());
+            var tempIntCodeComputer = new IntCodeComputer(opCodes.ToList(), inputter, outputter);
             return tempIntCodeComputer;
         }
         
