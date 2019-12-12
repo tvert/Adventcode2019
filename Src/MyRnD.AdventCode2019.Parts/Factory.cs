@@ -9,6 +9,39 @@ namespace MyRnD.AdventCode2019.Parts
     {
         const int BufferSize = 1024;
 
+        public UniversalOrbitMap CreateUniversalOrbitMapFromFile(string fullFileName)
+        {
+            var tempMap = new UniversalOrbitMap();
+            using (var fileStream = File.OpenRead(fullFileName))
+            using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, BufferSize))
+            {
+                string line;
+                while ((line = streamReader.ReadLine()) != null)
+                {
+                    // 1 orbit relation per line
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        tempMap.UpdateFromLine(line);
+                    }
+                }
+            }
+            return tempMap;
+        }
+
+        public IInputter CreateAutoInputter(int autoValue)
+        {
+            return new AutoInputter(autoValue);
+        }
+        public IOutputter CreateConsoleOutputter()
+        {
+            return new ConsoleOutputter();
+        }
+
+        public PasswordEvaluator CreatePasswordEvaluator()
+        {
+            return new PasswordEvaluator();
+        }
+
         public CrossedWiresResolver CreateCrossedWiresResolver()
         {
             return new CrossedWiresResolver();
@@ -39,6 +72,12 @@ namespace MyRnD.AdventCode2019.Parts
 
         public IntCodeComputer CreateIntCodeComputerFromFile(string fullFileName)
         {
+            return CreateIntCodeComputerFromFile(fullFileName, CreateAutoInputter(0), CreateConsoleOutputter());
+        }
+
+        public IntCodeComputer CreateIntCodeComputerFromFile(
+            string fullFileName, IInputter inputter, IOutputter outputter)
+        {
             List<int> opCodes = new List<int>();
             using (var fileStream = File.OpenRead(fullFileName))
             using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, BufferSize))
@@ -55,7 +94,7 @@ namespace MyRnD.AdventCode2019.Parts
                     }
                 }
             }
-            var tempIntCodeComputer = new IntCodeComputer(opCodes.ToList());
+            var tempIntCodeComputer = new IntCodeComputer(opCodes.ToList(), inputter, outputter);
             return tempIntCodeComputer;
         }
         

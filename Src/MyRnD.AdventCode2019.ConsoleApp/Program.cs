@@ -7,9 +7,9 @@ namespace MyRnD.AdventCode2019.ConsoleApp
     {
         static void Main(string[] args)
         {
+#if false
             Console.WriteLine("PRESS ENTER TO START ...");
             Console.ReadLine();
-#if false
             Separator(nameof(Program.Day01));
             Day01();
 
@@ -17,12 +17,25 @@ namespace MyRnD.AdventCode2019.ConsoleApp
             Day02_A();
             Separator(nameof(Program.Day02_B));
             Day02_B();
-#endif
+
             Separator(nameof(Program.Day03_A));
             Day03_A();
-
             Separator(nameof(Program.Day03_B));
             Day03_B();
+
+            Separator(nameof(Program.Day04_A));
+            Day04_A();
+
+            Separator(nameof(Program.Day06_A));
+            Day06_A();
+            Separator(nameof(Program.Day06_B));
+            Day06_B();
+
+            Separator(nameof(Program.Day05_A));
+            Day05_A();
+#endif
+            Separator(nameof(Program.Day05_B));
+            Day05_B();
 
             Console.WriteLine("PRESS ENTER TO STOP.");
             Console.ReadLine();
@@ -34,5 +47,4 @@ namespace MyRnD.AdventCode2019.ConsoleApp
             Console.WriteLine($"***************** {name.ToUpper()} ********************");
         }
     }
-
 }
