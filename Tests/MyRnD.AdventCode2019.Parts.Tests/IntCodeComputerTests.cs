@@ -228,6 +228,20 @@ namespace MyRnD.AdventCode2019.Parts.Tests
 
         #region Day 5 - Part B
 
+        private static readonly int[] ExampleB1positionMode = { 3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8 };
+        private static readonly int[] ExampleB2positionMode = { 3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8 };
+        private static readonly int[] ExampleB3positionMode = { 3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9 };
+
+        private static readonly int[] ExampleB1immediateMode = { 3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8 };
+        private static readonly int[] ExampleB2immediateMode = { 3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8 };
+        private static readonly int[] ExampleB3immediateMode = { 3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1 };
+
+        private static readonly int[] ExampleB4LargerSample =
+        {
+            3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31, 1106, 0, 36, 98, 0, 0, 1002, 21, 125,
+            20, 4, 20, 1105, 1, 46, 104, 999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99
+        };
+
         [TestMethod]
         public void IntCodeComputer_Run_Day05_TEST_Thermal_Radiators()
         {
@@ -252,13 +266,431 @@ namespace MyRnD.AdventCode2019.Parts.Tests
             Assert.AreEqual(678, opCodes.Length);
             Assert.AreEqual(opCodes.Length, actual.Count);
             List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
-            Assert.AreEqual(10, outputtedValues.Count);
-            for (int i = 0; i < outputtedValues.Count - 1; i++)
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(2369720, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB1_PositionMode_NotEquals_8()
+        {
+            // Arrange
+            int[] opCodes = ExampleB1positionMode;
             {
-                Assert.AreEqual(0, outputtedValues[i], $"At index '{i}'");
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
             }
 
-            Assert.AreEqual(13933662, outputtedValues.Last());
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(5));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(11, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(0, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB1_PositionMode_Equals_8()
+        {
+            // Arrange
+            int[] opCodes = ExampleB1positionMode;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(8));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(11, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(1, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB2_PositionMode_LessThan_8()
+        {
+            // Arrange
+            int[] opCodes = ExampleB2positionMode;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(5));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(11, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(1, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB2_PositionMode_GreaterThan_8()
+        {
+            // Arrange
+            int[] opCodes = ExampleB2positionMode;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(9));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(11, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(0, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB3_PositionMode_JumpDisplay0_0()
+        {
+            // Arrange
+            int[] opCodes = ExampleB3positionMode;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(0));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(16, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(0, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB3_PositionMode_JumpDisplay1_5()
+        {
+            // Arrange
+            int[] opCodes = ExampleB3positionMode;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(5));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(16, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(1, outputtedValues.Last());
+        }
+
+
+
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB1_ImmediateMode_NotEquals_8()
+        {
+            // Arrange
+            int[] opCodes = ExampleB1immediateMode;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(5));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(11, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(0, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB1_ImmediateMode_Equals_8()
+        {
+            // Arrange
+            int[] opCodes = ExampleB1immediateMode;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(8));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(11, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(1, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB2_ImmediateMode_LessThan_8()
+        {
+            // Arrange
+            int[] opCodes = ExampleB2immediateMode;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(5));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(11, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(1, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB2_ImmediateMode_GreaterThan_8()
+        {
+            // Arrange
+            int[] opCodes = ExampleB2immediateMode;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(9));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(11, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(0, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB3_ImmediateMode_JumpDisplay0_0()
+        {
+            // Arrange
+            int[] opCodes = ExampleB3immediateMode;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(0));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(13, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(0, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB3_ImmediateMode_JumpDisplay1_5()
+        {
+            // Arrange
+            int[] opCodes = ExampleB3immediateMode;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(5));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(13, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(1, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB4_LargerSample_Display999_7()
+        {
+            // Arrange
+            int[] opCodes = ExampleB4LargerSample;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(7));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(47, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(999, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB4_LargerSample_Display1000_8()
+        {
+            // Arrange
+            int[] opCodes = ExampleB4LargerSample;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(8));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(47, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(1000, outputtedValues.Last());
+        }
+
+        [TestMethod]
+        public void IntCodeComputer_Run_Day05_ExampleB4_LargerSample_Display1001_9()
+        {
+            // Arrange
+            int[] opCodes = ExampleB4LargerSample;
+            {
+                var opCodesAsString = string.Concat(opCodes.Select(s => s + ", "));
+                System.Console.WriteLine($"Initial '[{opCodesAsString}]'.");
+            }
+
+            _intCodeComputer = new IntCodeComputer(opCodes.ToList(), new AutoInputter(9));
+
+            // Act
+            var actual = _intCodeComputer.Run();
+            {
+                var opCodesAsString = string.Concat(actual.Select(s => s + ", "));
+                System.Console.WriteLine($"Result '[{opCodesAsString}]'.");
+            }
+
+            // Assert
+            _mockRepos.VerifyAll();
+            Assert.AreEqual(47, opCodes.Length);
+            Assert.AreEqual(opCodes.Length, actual.Count);
+            List<int> outputtedValues = _intCodeComputer.Outputter.OutputValues;
+            Assert.AreEqual(1, outputtedValues.Count);
+            Assert.AreEqual(1001, outputtedValues.Last());
         }
         #endregion
     }

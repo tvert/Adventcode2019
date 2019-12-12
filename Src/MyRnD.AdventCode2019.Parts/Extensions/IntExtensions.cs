@@ -8,7 +8,11 @@
         public const int OpCodeAdd = 1;
         public const int OpCodeMultiply = 2;
         public const int OpCodeInput = 3;
-        public const int OpCodeoutput = 4;
+        public const int OpCodeOutput = 4;
+        public const int OpCodeJumpIfTrue = 5;
+        public const int OpCodeJumpIfFalse = 6;
+        public const int OpCodeJumpLessThan = 7;
+        public const int OpCodeEquals = 8;
         public const int OpCodeFinal = 99;
 
 
@@ -29,7 +33,24 @@
 
         public static bool IsOutputOp(this int opCode)
         {
-            return opCode == OpCodeoutput;
+            return opCode == OpCodeOutput;
+        }
+
+        public static bool IsJumpIfTrueOp(this int opCode)
+        {
+            return opCode == OpCodeJumpIfTrue;
+        }
+        public static bool IsJumpIfFalseOp(this int opCode)
+        {
+            return opCode == OpCodeJumpIfFalse;
+        }
+        public static bool IsJumpLessThanOp(this int opCode)
+        {
+            return opCode == OpCodeJumpLessThan;
+        }
+        public static bool IsEqualsOp(this int opCode)
+        {
+            return opCode == OpCodeEquals;
         }
 
         public static bool IsFinalOp(this int opCode)

@@ -61,9 +61,7 @@ namespace MyRnD.AdventCode2019.Parts
 
     public sealed class IntCodeComputer
     {
-        // Fields
-        private readonly IInputter _inputter;
-
+        internal IInputter Inputter { get; private set; }
 
         public IntCodeComputer(List<int> initialIntCodes)
             : this(initialIntCodes, new AutoInputter(0), new ConsoleOutputter())
@@ -78,7 +76,7 @@ namespace MyRnD.AdventCode2019.Parts
         public IntCodeComputer(List<int> initialIntCodes, IInputter inputter, IOutputter outputter)
         {
             InitialIntCodes = initialIntCodes;
-            _inputter = inputter;
+            Inputter = inputter;
             Outputter = outputter;
         }
 
@@ -160,7 +158,7 @@ namespace MyRnD.AdventCode2019.Parts
             else if (currentOpCode.IsInputOp())
             {
                 var storeInputAtIndex = intCodes[currentInstructionIndex + 1];
-                var result = _inputter.InputValue();
+                var result = Inputter.InputValue();
                 intCodes[storeInputAtIndex] = result;
                 newInstructionIndex += 2; // opCode + Index
             }
@@ -171,6 +169,62 @@ namespace MyRnD.AdventCode2019.Parts
                     : intCodes[currentInstructionIndex + 1];
                 Outputter.OutputValue(outputValue);
                 newInstructionIndex += 2; // opCode + Index
+            }
+            else if (currentOpCode.IsJumpIfTrueOp())
+            {
+                int valueToEvaluate = parameterMode1.IsPositionMode()
+                    ? intCodes[intCodes[currentInstructionIndex + 1]]
+                    : intCodes[currentInstructionIndex + 1];
+                if (valueToEvaluate != 0)
+                {
+                    int input2 = parameterMode2.IsPositionMode()
+                        ? intCodes[intCodes[currentInstructionIndex + 2]]
+                        : intCodes[currentInstructionIndex + 2];
+                    newInstructionIndex = input2;
+                }
+                else
+                    newInstructionIndex += 3; // opCode + valueToEvaluate + newInstructionIndex
+            }
+            else if (currentOpCode.IsJumpIfFalseOp())
+            {
+                int valueToEvaluate = parameterMode1.IsPositionMode()
+                    ? intCodes[intCodes[currentInstructionIndex + 1]]
+                    : intCodes[currentInstructionIndex + 1];
+                if (valueToEvaluate == 0)
+                {
+                    int input2 = parameterMode2.IsPositionMode()
+                        ? intCodes[intCodes[currentInstructionIndex + 2]]
+                        : intCodes[currentInstructionIndex + 2];
+                    newInstructionIndex = input2;
+                }
+                else
+                    newInstructionIndex += 3; // opCode + valueToEvaluate + newInstructionIndex
+            }
+            else if (currentOpCode.IsJumpLessThanOp())
+            {
+                int input1 = parameterMode1.IsPositionMode()
+                    ? intCodes[intCodes[currentInstructionIndex + 1]]
+                    : intCodes[currentInstructionIndex + 1];
+                int input2 = parameterMode2.IsPositionMode()
+                    ? intCodes[intCodes[currentInstructionIndex + 2]]
+                    : intCodes[currentInstructionIndex + 2];
+                var outputIndex = intCodes[currentInstructionIndex + 3];
+                int result = input1 < input2 ? 1 : 0;
+                intCodes[outputIndex] = result;
+                newInstructionIndex += 4; // opCode + Input1 + Input2 + Output
+            }
+            else if (currentOpCode.IsEqualsOp())
+            {
+                int input1 = parameterMode1.IsPositionMode()
+                    ? intCodes[intCodes[currentInstructionIndex + 1]]
+                    : intCodes[currentInstructionIndex + 1];
+                int input2 = parameterMode2.IsPositionMode()
+                    ? intCodes[intCodes[currentInstructionIndex + 2]]
+                    : intCodes[currentInstructionIndex + 2];
+                var outputIndex = intCodes[currentInstructionIndex + 3];
+                int result = input1 == input2 ? 1 : 0;
+                intCodes[outputIndex] = result;
+                newInstructionIndex += 4; // opCode + Input1 + Input2 + Output
             }
             else
             {
